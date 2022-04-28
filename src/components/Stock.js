@@ -7,7 +7,7 @@ function Stock({ id, name, price, change }) {
     const [chartData, setChartData] = useState([])
 
     function processChartData(stockCandleData) {
-        if(stockCandleData["s"] != "ok"){
+        if (stockCandleData["s"] !== "ok") {
             return;
         }
         var len = stockCandleData[RESPONSE_SYMBOLS.CLOSE].length;
@@ -21,28 +21,28 @@ function Stock({ id, name, price, change }) {
             transformedData.push(temp)
         }
         if (isMarketOpen()) {
-            const [_s, endTime] = getMarketStartEndUnixTime()
+            const [_, endTime] = getMarketStartEndUnixTime()
             transformedData.push([endTime, '', '', '', ''])
         }
         return transformedData
     }
 
-    function fetchStockCandles() {
-        getStockCandles(id, (stockCandleData) => {
-            var convertedData = processChartData(stockCandleData);
-            console.log(convertedData)
-            setChartData(convertedData);
-        },
-            (error) => console.log(error))
-        setTimeout(fetchStockCandles, 5000);
-    }
 
     useEffect(() => {
+        function fetchStockCandles() {
+            getStockCandles(id, (stockCandleData) => {
+                var convertedData = processChartData(stockCandleData);
+                setChartData(convertedData);
+            },
+                (error) => console.log(error))
+            setTimeout(fetchStockCandles, 5000);
+        }
+
         fetchStockCandles()
     }, []);
 
     return (
-        <div className="row" key={id}>
+        <div className="row">
             <div className="col bg-primary m-1 text-center text-white">
                 {name}
             </div>

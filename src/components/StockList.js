@@ -1,12 +1,15 @@
 import React from "react";
+import { RESPONSE_SYMBOLS } from "../Utils/finnApiHelper.js";
 import Stock from './Stock.js';
 
 function StockList({ stocks }) {
 
-    const stocksList = []
+    const stockList = []
+    console.log(stocks)
     Object.entries(stocks).forEach(([stockSymbol, stockData]) => {
-        stocksList.push((<Stock id={stockSymbol} name={stockSymbol} price={stockData["p"]} change={stockData.change} />))
-        console.log(stockData, stockSymbol)
+        stockList.map(e => console.log(e))
+        stockList.push((<Stock key={stockSymbol} id={stockSymbol} name={stockSymbol} price={stockData[RESPONSE_SYMBOLS.CURRENT_PRICE_WEBSOCKET]} change={stockData.change} />))
+        //console.log(stockData, stockSymbol)
     });
 
     return (
@@ -22,7 +25,7 @@ function StockList({ stocks }) {
                     Stock Price
                 </div>
             </div>
-            {stocksList}
+            {stockList}
         </div>
     );
 }

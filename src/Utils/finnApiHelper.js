@@ -10,6 +10,7 @@ export const RESPONSE_SYMBOLS = {
     LOW: "l",
     CLOSE: "c",
     CURRENT_PRICE: "c",
+    CURRENT_PRICE_WEBSOCKET: "p",
     CHANGE: "d",
     SYMBOL: "s"
 }

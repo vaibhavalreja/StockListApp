@@ -2,19 +2,41 @@ import './App.css';
 import StockList from './components/StockList';
 import InputForm from './components/InputForm';
 import { useState, useEffect } from 'react';
-import { getLastQuote } from './Utils/finnApiHelper';
+import { getLastQuote, RESPONSE_SYMBOLS } from './Utils/finnApiHelper';
 
 const ws = new WebSocket('wss://ws.finnhub.io?token=c9hoovqad3idasnd6vfg');
 
 function App() {
   const [stockList, setStockList] = useState({ 'AAPL': { name: 'AAPL', p: '12', change: -1 } });
-  const [ stockSymboList, setStockSymbolList ] = useState([])
 
   useEffect(() => {
+
+    function updateStockList(stockListData) {
+      stockListData.forEach(element => {
+        var newStockSymbolKey = RESPONSE_SYMBOLS.SYMBOL;
+        var currentPrice = RESPONSE_SYMBOLS.CURRENT_PRICE_WEBSOCKET;
+        var newStockSymbol = element[newStockSymbolKey]
+
+        if (newStockSymbol in stockList) {
+          var curStock = stockList[newStockSymbol]
+          var pp = curStock.p
+
+          curStock.p = element[currentPrice]
+          curStock.change = element[currentPrice] - pp
+        } else {
+          stockList[newStockSymbol] = {
+            name: newStockSymbol,
+            p: element[currentPrice],
+            change: 1
+          }
+        }
+      });
+      // console.log(stockList);
+      setStockList({ ...stockList });
+    }
+
     ws.onopen = (_e) => {
       console.log('onopen');
-      // ws.send(JSON.stringify({ type: 'subscribe', symbol: 'AAPL' }))
-      //ws.send(JSON.stringify({type:'subscribe', symbol: 'AAPL'}))
     }
     ws.onclose = _e =>
       console.log('onclose');
@@ -24,45 +46,34 @@ function App() {
       var data = JSON.parse(e.data)
       if (data["type"] === 'trade') {
         //console.log(data);
-        data.data.forEach(element => {
-          if(element["s"] in stockList){
-            var curStock = stockList[element["s"]]
-            var pp =  curStock.p
-            curStock.p = element["p"]
-            curStock.change = curStock.p - pp            
-          }else{
-            stockList[element["s"]] = {
-              name: element["s"],
-              p : element["p"],
-              change: 1
-            }
-          }
-        });
-
-        setStockList({...stockList})
-      }else{
+        updateStockList(data.data)
+      } else {
         console.log("not a trade message")
       }
     };
   }, []);
   ;
 
+
   function onSubmmitHandler(stockName) {
+    if (!(stockName
+      && (typeof stockName === 'string' || stockName instanceof String)
+      && stockName.trim())) {
+      return;
+    }
+    stockName = stockName.trim().toUpperCase();
+
     getLastQuote(stockName, (data) => {
       console.log(data)
       stockList[`${stockName}`] = {
         name: stockName,
-        p: data["c"],
-        change: data["d"]
+        p: data[RESPONSE_SYMBOLS.CURRENT_PRICE_WEBSOCKET],
+        change: data[RESPONSE_SYMBOLS.CHANGE]
       }
-      //console.log({...stockList})
-      console.log("--------stocklist in submit-------------------")
-      console.log(stockList)
-      console.log("---------------------------")
-      setStockList({...stockList})
       ws.send(JSON.stringify({ type: 'subscribe', symbol: stockName }))
+      setStockList({ ...stockList })
     },
-    (error) => console.log(error))
+      (error) => console.log(error))
   }
 
   return (
