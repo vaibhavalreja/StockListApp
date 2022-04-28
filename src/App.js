@@ -51,6 +51,9 @@ function App() {
         console.log("not a trade message")
       }
     };
+
+    // Initialise with one stock
+    onSubmmitHandler('AAPL')
   }, []);
   ;
 
