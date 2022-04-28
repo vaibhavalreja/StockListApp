@@ -7,7 +7,7 @@ import { getLastQuote, RESPONSE_SYMBOLS } from './Utils/finnApiHelper';
 const ws = new WebSocket('wss://ws.finnhub.io?token=c9hoovqad3idasnd6vfg');
 
 function App() {
-  const [stockList, setStockList] = useState({ 'AAPL': { name: 'AAPL', p: '12', change: -1 } });
+  const [stockList, setStockList] = useState({});
 
   useEffect(() => {
 
@@ -37,6 +37,10 @@ function App() {
 
     ws.onopen = (_e) => {
       console.log('onopen');
+      if(!('AAPL' in stockList)){
+        // Initialise with one stock
+        onSubmmitHandler('AAPL')
+      }
     }
     ws.onclose = _e =>
       console.log('onclose');
@@ -52,8 +56,6 @@ function App() {
       }
     };
 
-    // Initialise with one stock
-    onSubmmitHandler('AAPL')
   }, []);
   ;
 
