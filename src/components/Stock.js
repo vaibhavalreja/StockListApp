@@ -7,6 +7,9 @@ function Stock({ id, name, price, change }) {
     const [chartData, setChartData] = useState([])
 
     function processChartData(stockCandleData) {
+        if(stockCandleData["s"] != "ok"){
+            return;
+        }
         var len = stockCandleData[RESPONSE_SYMBOLS.CLOSE].length;
         var transformedData = []
         for (let i = 0; i < len; i++) {
