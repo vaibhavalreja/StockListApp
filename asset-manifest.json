@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/StockListApp/static/css/main.073c9b0a.css",
-    "main.js": "/StockListApp/static/js/main.256db455.js",
+    "main.js": "/StockListApp/static/js/main.376d0ce4.js",
     "static/js/787.1c155fde.chunk.js": "/StockListApp/static/js/787.1c155fde.chunk.js",
     "index.html": "/StockListApp/index.html",
     "main.073c9b0a.css.map": "/StockListApp/static/css/main.073c9b0a.css.map",
-    "main.256db455.js.map": "/StockListApp/static/js/main.256db455.js.map",
+    "main.376d0ce4.js.map": "/StockListApp/static/js/main.376d0ce4.js.map",
     "787.1c155fde.chunk.js.map": "/StockListApp/static/js/787.1c155fde.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.073c9b0a.css",
-    "static/js/main.256db455.js"
+    "static/js/main.376d0ce4.js"
   ]
 }
