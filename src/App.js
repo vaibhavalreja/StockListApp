@@ -72,7 +72,7 @@ function App() {
       console.log(data)
       stockList[`${stockName}`] = {
         name: stockName,
-        p: data[RESPONSE_SYMBOLS.CURRENT_PRICE_WEBSOCKET],
+        p: data[RESPONSE_SYMBOLS.CURRENT_PRICE],
         change: data[RESPONSE_SYMBOLS.CHANGE]
       }
       ws.send(JSON.stringify({ type: 'subscribe', symbol: stockName }))
