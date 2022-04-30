@@ -23,8 +23,10 @@ export function searchSymbols(stockName, onSuccess, onError) {
 
 export function isMarketOpen() {
     var edtTime = new Date((new Date()).toLocaleString('en-US', { timeZone: 'America/New_York' }));
-    if ((edtTime.getHours() < 9 || (edtTime.getHours() === 9 && edtTime.getMinutes() < 30))
-        || (edtTime.getHours() >= 16)) {
+    var weekDay = edtTime.getDay()
+
+    if ((weekDay === 0 || weekDay === 6) || (edtTime.getHours() < 9 || (edtTime.getHours() === 9 && edtTime.getMinutes() < 30)
+        || (edtTime.getHours() >= 16))) {
         return false;
     }
     return true;
@@ -35,8 +37,18 @@ export function getMarketStartEndUnixTime() {
     var offset = -1 * (d.getTimezoneOffset() - 240) * 60 * 1000;
 
     var edtTime = new Date(d.toLocaleString('en-US', { timeZone: 'America/New_York' }))
-    if (edtTime.getHours() < 9 || (edtTime.getHours() === 9 && edtTime.getMinutes() < 30)) {
-        edtTime.setDate(edtTime.getDate() - 1);
+    var weekDay = edtTime.getDay()
+    if ((weekDay !== 0 || weekDay !== 6) && (edtTime.getHours() < 9 || (edtTime.getHours() === 9 && edtTime.getMinutes() < 30))) {
+        if (weekDay == 1) {
+            edtTime.setDate(edtTime.getDate() - 3);
+        } else {
+            edtTime.setDate(edtTime.getDate() - 1);
+        }
+    }
+    if (weekDay === 0) {
+        edtTime.setDate(edtTime.getDate() - 2)
+    } else if (weekDay === 6) {
+        edtTime.setDate(edtTime.getDate() - 1)
     }
 
     var startTime = Math.floor(((new Date(edtTime.getFullYear(), edtTime.getMonth(), edtTime.getDate(), 9, 30)).getTime() + offset) / 1000)
