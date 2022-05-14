@@ -12,10 +12,10 @@ function InputForm({ onSubmmitHandler }) {
                         setStockName('');
                         onSubmmitHandler(stockName);
                     }}>
-                        <label for="inputStockName">Enter stock name: </label>
+                        <label htmlFor="inputStockName">Enter stock name: </label>
                         <input
                             id="inputStockName"
-                            className="form-control m-5"
+                            className="form-control m-1"
                             type="text"
                             value={stockName}
                             onChange={(e) => setStockName(e.target.value)}
