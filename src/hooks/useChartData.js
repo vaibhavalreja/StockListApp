@@ -1,8 +1,10 @@
 import { useLayoutEffect, useState } from "react"
 import { RESPONSE_SYMBOLS, getStockCandles, isMarketOpen, getMarketStartEndUnixTime } from '../Utils/finnApiHelper'
+import REQUEST_STATUS from '../Utils/requestStatus'
 
 function useChartData(stockSymbol) {
     const [chartData, setChartData] = useState([])
+    const [requestStatus, setRequestStatus] = useState(REQUEST_STATUS.PENDING);
 
     function processChartData(stockCandleData) {
         if (stockCandleData["s"] !== "ok") {
@@ -31,15 +33,16 @@ function useChartData(stockSymbol) {
             getStockCandles(stockSymbol, (stockCandleData) => {
                 var convertedData = processChartData(stockCandleData);
                 setChartData(convertedData);
+                setRequestStatus(REQUEST_STATUS.SUCCESS)
             },
-                (error) => console.log(error))
+                () => setRequestStatus(REQUEST_STATUS.FAILURE))
             setTimeout(fetchStockCandles, 5000);
         }
 
         fetchStockCandles()
     }, []);
 
-    return { chartData }
+    return { chartData, requestStatus }
 }
 
 export default useChartData
