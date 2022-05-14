@@ -1,45 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Chart from 'react-apexcharts';
-import { RESPONSE_SYMBOLS, getStockCandles, isMarketOpen, getMarketStartEndUnixTime } from '../Utils/finnApiHelper';
-
+import useChartData from "../hooks/useChartData";
 
 function Stock({ id, name, price, change }) {
-    const [chartData, setChartData] = useState([])
-
-    function processChartData(stockCandleData) {
-        if (stockCandleData["s"] !== "ok") {
-            return;
-        }
-        var len = stockCandleData[RESPONSE_SYMBOLS.CLOSE].length;
-        var transformedData = []
-        for (let i = 0; i < len; i++) {
-            var temp = [stockCandleData[RESPONSE_SYMBOLS.TIME_STAMP][i],
-            stockCandleData[RESPONSE_SYMBOLS.OPEN][i],
-            stockCandleData[RESPONSE_SYMBOLS.HIGH][i],
-            stockCandleData[RESPONSE_SYMBOLS.LOW][i],
-            stockCandleData[RESPONSE_SYMBOLS.CLOSE][i]]
-            transformedData.push(temp)
-        }
-        if (isMarketOpen()) {
-            const [_, endTime] = getMarketStartEndUnixTime()
-            transformedData.push([endTime, '', '', '', ''])
-        }
-        return transformedData
-    }
-
-
-    useEffect(() => {
-        function fetchStockCandles() {
-            getStockCandles(id, (stockCandleData) => {
-                var convertedData = processChartData(stockCandleData);
-                setChartData(convertedData);
-            },
-                (error) => console.log(error))
-            setTimeout(fetchStockCandles, 5000);
-        }
-
-        fetchStockCandles()
-    }, []);
+    const { chartData } = useChartData(id)
 
     return (
         <div className="row">
