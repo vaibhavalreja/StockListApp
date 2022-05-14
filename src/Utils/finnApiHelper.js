@@ -39,7 +39,7 @@ export function getMarketStartEndUnixTime() {
     var edtTime = new Date(d.toLocaleString('en-US', { timeZone: 'America/New_York' }))
     var weekDay = edtTime.getDay()
     if ((weekDay !== 0 || weekDay !== 6) && (edtTime.getHours() < 9 || (edtTime.getHours() === 9 && edtTime.getMinutes() < 30))) {
-        if (weekDay == 1) {
+        if (weekDay === 1) {
             edtTime.setDate(edtTime.getDate() - 3);
         } else {
             edtTime.setDate(edtTime.getDate() - 1);
